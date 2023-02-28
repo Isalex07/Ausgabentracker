@@ -1,0 +1,13 @@
+// wenn es größer als 100 Euro 
+
+CREATE OR REPLACE TRIGGER BetragAnmerkung
+AFTER  INSERT ON ausgabe
+WHEN(NEW.Betrag >= 100.00)
+insert into protokoll(Kennzeichnung,AusgabenID) values('IN',NEW.AusgabenID);
+
+// wenn es um eine berufliche Kategorie geht. 
+
+CREATE OR REPLACE TRIGGER BetragKategorie
+AFTER  INSERT ON ausgabe
+	WHEN(NEW.Kategorie == 'Beruf/Arbeit/Studium')
+	insert into protokoll(Kennzeichnung,AusgabenID) values('IN',NEW.AusgabenID);
