@@ -1,0 +1,31 @@
+// View allgemeiner Betrag im Jahr. Im welcher Kategorie habe ich das Geld ausgegeben
+
+create view ViewimJahr as 
+select sum(Betrag) as "Betrag",table2.Bezeichnung as "Kategorie" ,table3.Bezeichnung  as "Zahlungsart" , year(datum) as "Jahr" from Ausgabe table1 inner join 
+kategorie table2 on table1.KategorieID = table2.KategorieID inner join zahlungsart table3  
+on table3.ZahlungsartID = table1.ZahlungsartID  
+group by year(datum);  
+
+// View allgemeiner Betrag im Jahr und Monat . Im welcher Kategorie habe ich das Geld ausgegeben
+
+create view ViewimJahrMonat as select sum(Betrag) as "Betrag",table2.Bezeichnung as "Kategorie" ,table3.Bezeichnung as "Zahlungsart" , year(datum) as "Jahr",  month(datum) as "Monat"
+from Ausgabe table1 inner join kategorie table2 on table1.KategorieID = table2.KategorieID 
+inner join zahlungsart table3 on table3.ZahlungsartID = table1.ZahlungsartID 
+group by year(datum),month(datum);
+
+
+// View summe Beträge pro Kategorie
+
+create view ViewKategorieAusgaben as 
+select sum(Betrag) as "Betrag",table2.Bezeichnung as "Kategorie" 
+from Ausgabe table1 inner join kategorie table2 on table1.KategorieID = table2.KategorieID 
+group by table2.KategorieID;
+
+// View Prozente kategorien
+
+create view KategorienProzentual as
+select round((sum(Betrag) * 100)/(select sum(Betrag) from Ausgabe),2)  as "Betrag" 	
+from Ausgabe table1 inner join Kategorie table2 
+on table1.KategorieID = table2.KategorieID group by table2.KategorieID;
+
+
