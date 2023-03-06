@@ -1,0 +1,48 @@
+CREATE TABLE nutzer (
+	 id BIGINT(20) NOT NULL,
+	 email VARCHAR(255) NULL DEFAULT NULL,
+	passwort  VARCHAR(255) NULL DEFAULT NULL,
+	PRIMARY KEY (id)
+);
+
+
+CREATE TABLE kategorie (
+	id  int AUTO_INCREMENT,
+	bezeichnung VARCHAR(255) not NULL ,
+	nutzer_id int not NULL ,
+	PRIMARY KEY (id),
+	CONSTRAINT FKnutzer_id FOREIGN KEY (nutzer_id) REFERENCES nutzer(id) 
+);
+
+
+CREATE TABLE zahlungsart (
+	id int AUTO_INCREMENT,
+	bezeichnung VARCHAR(255) NOT NULL,
+	nutzer_id int NOT NULL,
+	PRIMARY KEY (id),
+	CONSTRAINT FKnutzer_id FOREIGN KEY (nutzer_id) REFERENCES nutzer(id) 
+);
+
+
+
+CREATE TABLE ausgabe (
+	id int  AUTO_INCREMENT,
+	betrag double(8,2) NOT NULL,
+	bezeichnung VARCHAR(255) NOT NULL,
+	datum DATE NOT NULL,
+	kategorie_id int NOT NULL,
+	nutzer_id int NOT NULL,
+	zahlungsart_id int NOT NULL,
+	PRIMARY KEY (id),
+	CONSTRAINT FKnutzer_id FOREIGN KEY (nutzer_id) REFERENCES nutzer(id) ,
+	CONSTRAINT FKkategorie_id FOREIGN KEY (kategorie_id) REFERENCES kategorie(id) ,
+	CONSTRAINT FKzahlungsart_id FOREIGN KEY (zahlungsart_id) REFERENCES zahlungsart(id) 
+);
+
+
+
+CREATE TABLE protokoll (
+  id  NOT NULL,
+  Kennzeichnung varchar(2) NOT NULL,
+  ausgaben_id int(11) NOT NULL
+);

@@ -1,0 +1,59 @@
+create view viewimJahr as
+
+SELECT sum(table1.Betrag) AS 'Betrag', 
+	table2.Bezeichnung AS 'Kategorie', 
+	table3.Bezeichnung AS 'Zahlungsart', 
+	year(table1.datum) AS 'Jahr'
+FROM ausgabe table1 inner join kategorie table2
+on table1.kategorie_id = table2.id  inner join 
+zahlungsart table3 on table3.id = table1.Zahlungsart_id
+GROUP BY year(table1.datum);
+
+create view ViewimJahrMonat AS 
+select sum(Betrag) AS 'Betrag',
+table2.Bezeichnung AS 'Kategorie' ,
+table3.Bezeichnung AS 'Zahlungsart' ,
+ year(datum) AS 'Jahr',
+ month(datum) AS 'Monat'
+from Ausgabe table1 inner join kategorie table2 
+on table1.kategorie_id = table2.id
+inner join zahlungsart table3 ON 
+table3.id = table1.Zahlungsart_id 
+group by year(datum),month(datum);
+
+
+
+
+create view ViewKategorieAusgaben as 
+select sum(Betrag) as "Betrag",table2.Bezeichnung as "Kategorie" 
+from Ausgabe table1 inner join kategorie table2 on table1.KategorieID = table2.id 
+group by table2.id;
+
+
+
+
+create view KategorienProzentual as
+select round((sum(Betrag) * 100)/(select sum(Betrag) from Ausgabe),2)  as "Betrag" 	
+from Ausgabe table1 inner join Kategorie table2 
+on table1.KategorieID = table2.id group by table2.id;
+
+
+
+
+DROP TRIGGER IF EXISTS Betraganmerkung;
+
+DELIMITER $$
+
+    CREATE TRIGGER Betraganmerkung AFTER INSERT ON `ausgabe`
+    FOR EACH ROW BEGIN
+      IF (NEW.betrag >= 100) THEN
+      	INSERT INTO protokoll(Kennzeichnung,AusgabeID) VALUES('IN',NEW.id);
+		END IF;
+    END$$
+
+DELIMITER ;
+/*----------------------------------------------------------------
+
+
+
+/*--------------------------------------------------------
